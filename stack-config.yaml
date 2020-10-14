@@ -1,0 +1,6 @@
+system-ghc: true
+install-ghc: false
+compiler-check: newer-minor
+ghc-options:
+  "$everything": -static -optl-static
+local-bin-path: /home/builder/bin

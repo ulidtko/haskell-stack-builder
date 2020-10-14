@@ -1,0 +1,22 @@
+-- This is the configuration file for the 'cabal' command line tool.
+--
+-- https://cabal.readthedocs.io/
+
+repository hackage.haskell.org
+  url: http://hackage.haskell.org/
+  -- secure: True
+  -- root-keys:
+  -- key-threshold: 3
+
+shared: False
+static: True
+
+split-sections: True
+executable-stripping: True
+
+-- TODO: --executable-static is available since Cabal 3.0 -- we have 2.4 currently.
+-- Emulate it here for now.
+program-default-options
+  ghc-options: -static -optl-static
+
+jobs: 1
