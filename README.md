@@ -25,3 +25,11 @@ Then supposing you have a Stack project under `foobar_project` and `binary_outpu
         stack build --copy-bins
 
 That's it. On build success, find the static executables under `binary_outputs/`.
+
+## Size ##
+
+**2.88 GiB** (3.09 GB):
+ * 1.3 GiB for GHC,
+ * 1.3 GiB for Stack package index,
+ * 200 MiB for a few Alpine packages,
+ * 60 MiB for Stack static binary.

@@ -1,6 +1,17 @@
-system-ghc: true
+system-ghc: false
 install-ghc: false
-compiler-check: newer-minor
+
 ghc-options:
   "$everything": -static -optl-static
 local-bin-path: /home/builder/bin
+
+setup-info:
+  ghc:
+    linux64-custom-musl-ncurses6:
+      8.6.5:
+        url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.6.5-release/ghc-8.6.5-x86_64-unknown-linux-musl.tar.xz"
+        content-length: 140167348
+        sha1: 3ce575af840e886ba5d2641f68577ace38ac21c6
+        sha256: ec6d0417822c3bfafc7aea0b0402294901231bc5d72dd17a2b849e3f44850695
+
+ghc-variant: musl
