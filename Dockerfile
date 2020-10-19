@@ -50,10 +50,13 @@ RUN curl -fsSL "$STACK_BIN" -o ${STACK_BIN##*/} && \
     # [+60 MiB]
 
 #-- drop root
+# hadolint ignore=SC2016
 RUN adduser -D -u 1000 builder && \
     echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/enable-builder-sudo && \
     sed -i 's:profile\.d/\*\.sh:profile.d/*:' /etc/profile && \
-    printf 'test -d "$HOME/bin" && [ "${PATH#*$HOME/bin}" == "$PATH" ] && export PATH="$PATH:$HOME/bin"' > /etc/profile.d/add-home-bin-to-PATH
+    printf 'test -d "$HOME/bin" && [ "${PATH#*$HOME/bin}" == "$PATH" ] && export PATH="$PATH:$HOME/bin"' > /etc/profile.d/add-home-bin-to-PATH && \
+    printf 'export PATH="$PATH:$(stack path --compiler-bin)"' > /etc/profile.d/add-stack-ghc-to-PATH && \
+    :
 # workaround sudo bug 42 https://github.com/sudo-project/sudo/issues/42
 RUN echo 'Set disable_coredump false' >> /etc/sudo.conf
 USER builder
@@ -69,13 +72,13 @@ RUN install -Dm644 /tmp/stack-config.yaml /home/builder/.stack/config.yaml && \
         --resolver=$STACK_RESOLVER \
         --ghc-variant=musl \
         $GHC_VERSION \
-        && \
+        ; success=$?; \
     rm -rf ~/.stack/programs/*/ghc-*.tar.xz \
            ~/.stack/programs/*/ghc-*/share/doc \
         ; \
     strip ~/.stack/programs/*/ghc-*/lib/ghc-*/bin/* 2>/dev/null \
         ; \
-    :
+    exit $success
 
 #-- almost done; pre-download snapshot index for speed [+1.29 GiB]
 RUN stack update
