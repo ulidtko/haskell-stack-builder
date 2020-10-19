@@ -19,4 +19,6 @@ executable-stripping: True
 program-default-options
   ghc-options: -static -optl-static
 
+-- Override from commandline if needed. Rationale: on CI, $ncpus is often
+-- ridiculously large (32+) but RAM is severely limited. And GHC loves RAM.
 jobs: 1
