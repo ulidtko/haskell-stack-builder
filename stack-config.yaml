@@ -1,9 +1,23 @@
 system-ghc: false
 install-ghc: false
 
-ghc-options:
-  "$everything": -static -optl-static
 local-bin-path: /home/builder/bin
+
+ghc-options:
+  $locals: -Wall
+  $targets: -Werror
+  $everything: -static -optl-static
+apply-ghc-options: everything
+configure-options:
+  $everything:
+    - --disable-shared
+    - --enable-static
+    - --disable-executable-dynamic
+    - --enable-executable-static
+
+#-- Override from commandline if needed. Rationale: on CI, $ncpus is often
+#-- ridiculously large (32+) but RAM is severely limited. And GHC loves RAM.
+jobs: 1
 
 setup-info:
   ghc:

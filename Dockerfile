@@ -63,10 +63,9 @@ USER builder
 WORKDIR /home/builder
 ENV ENV=/etc/profile
 
-#-- configure Cabal and Stack, pull a GHC, strip it down [+1.34 GiB]
-COPY cabal-config.cabal stack-config.yaml /tmp/
+#-- configure Stack, pull a GHC, strip it down [+1.34 GiB]
+COPY stack-config.yaml /tmp/
 RUN install -Dm644 /tmp/stack-config.yaml /home/builder/.stack/config.yaml && \
-    install -Dm644 /tmp/cabal-config.cabal /home/builder/.cabal/config && \
     stack setup \
         --install-ghc \
         --resolver=$STACK_RESOLVER \
