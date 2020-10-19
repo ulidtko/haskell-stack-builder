@@ -14,4 +14,16 @@ setup-info:
         sha1: 3ce575af840e886ba5d2641f68577ace38ac21c6
         sha256: ec6d0417822c3bfafc7aea0b0402294901231bc5d72dd17a2b849e3f44850695
 
+      8.8.4:
+        url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.8.4-release/ghc-8.8.4-x86_64-unknown-linux-musl.tar.xz"
+        content-length: 153669364
+        sha1: 7a9c1e84eed98b742cbc184cac6b9d9b6d9d18d4
+        sha256: 05df654655dc08b9056487839b7a5fbe6d5b8325fa366deb9fe6422e7ce7916c
+
+      8.10.2:
+        url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.10.2-release/ghc-8.10.2-x86_64-unknown-linux-musl.tar.xz"
+        content-length: 161032796
+        sha1: fe1b01fc8f988b3fe6e46494d89e80c3a6d24184
+        sha256: 9081c5a8d66cda6b886978bd8277109fe160adf326cbba6283ca9abbdccd45c1
+
 ghc-variant: musl
