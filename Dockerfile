@@ -16,10 +16,14 @@ RUN apk update --no-cache && \
         gmp-dev \
         libc-dev \
         make \
+        ncurses-libs \
         perl \
         sudo \
         zlib-dev \
     ; # [+189MiB]
+
+# Alpine has libtinfo linked into libncurses
+RUN ln -vsf libncursesw.so.6 /usr/lib/libtinfow.so.6
 
 ARG GHC_VERSION=8.6.5
 ARG STACK_RESOLVER=lts-14.27
