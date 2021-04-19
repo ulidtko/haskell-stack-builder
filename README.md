@@ -8,13 +8,13 @@ Cabal version: 2.4.1.0
 
 Stack version: 2.5.1
 
-The image is `FROM alpine` but configured for building static binaries; build outputs will run on any other Linux distro. Musl libc is linked into those binaries.
+The image is `FROM alpine` but configured for building static binaries; build outputs should run on any other Linux distro. Musl libc is linked into those binaries.
 
 ## Basic usage, volumes ##
 
 First build the image:
 
-    docker build -t haskell-stack-builder:latest .
+    docker build -t haskell-stack-builder:lts-14.27 .
 
 Then supposing you have a Stack project under `foobar_project` and `binary_outputs` directory:
 
@@ -33,3 +33,6 @@ That's it. On build success, find the static executables under `binary_outputs/`
  * 1.3 GiB for Stack package index,
  * 200 MiB for a few Alpine packages,
  * 60 MiB for Stack static binary.
+
+Extra effort has been applied to prune unnecessary stuff; see [Dockerfile](./Dockerfile).
+
