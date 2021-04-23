@@ -64,11 +64,12 @@ WORKDIR /home/builder
 ENV ENV=/etc/profile
 
 #-- configure Stack, pull a GHC, strip it down [+1.34 GiB]
-COPY stack-config.yaml /tmp/
-RUN install -Dm644 /tmp/stack-config.yaml /home/builder/.stack/config.yaml && \
+COPY --chown=builder stack-config.yaml /tmp/
+RUN \
     if [ "$GHC_VERSION" = "8.6.5" ]; then \
         sed -i 's!\(- --enable-executable-static\)!#\1 # requires Cabal 3.0+!' /tmp/stack-config.yaml; \
     fi && \
+    install -Dm644 /tmp/stack-config.yaml /home/builder/.stack/config.yaml && \
     stack setup \
         --install-ghc \
         --resolver=$STACK_RESOLVER \
