@@ -2,13 +2,14 @@
 
 This is an unprivileged (rootless) Docker Image for building Haskell using Stack.
 
-GHC version: 8.6.5
+Default build config:
 
-Cabal version: 2.4.1.0
+ * GHC version: 8.10.7
+ * Cabal version: 3.2.1.0
+ * Stack version: 2.7.3
+ * Stackage snapshot: LTS-18.17
 
-Stack version: 2.5.1
-
-The image is `FROM alpine` but configured for building static binaries; build outputs should run on any other Linux distro. Musl libc is linked into those binaries.
+Versions are customizable via `--build-arg`'s, see below.
 
 ## Basic usage, volumes ##
 
@@ -21,17 +22,19 @@ Then supposing you have a Stack project under `foobar_project` and `binary_outpu
     docker run --rm -t \
         -v $PWD/foobar_project:/home/builder/src \
         -v $PWD/binary_outputs:/home/builder/bin \
-        haskell-stack-builder:latest \
+        haskell-stack-builder:lts-14.27 \
         stack build --copy-bins
 
-That's it. On build success, find the static executables under `binary_outputs/`.
+That's it. On build success, find the executables under `binary_outputs/`.
 
 ## Size ##
 
-**2.88 GiB** (3.09 GB):
- * 1.3 GiB for GHC,
- * 1.3 GiB for Stack package index,
- * 200 MiB for a few Alpine packages,
+In LTS-14.27 build config & `FROM debian:buster-slim`:
+
+**3.05 GiB** (3.28 GB):
+ * 1.35 GiB for GHC,
+ * 1.35 GiB for Stack package index,
+ * 229 MiB for a few basic Debian packages,
  * 60 MiB for Stack static binary.
 
 Extra effort has been applied to prune unnecessary stuff; see [Dockerfile](./Dockerfile).
@@ -58,4 +61,4 @@ Look into the [lockfile][stack.yaml.lock] if you want to know the best **invalid
 [YARN_CACHE_FOLDER]: https://classic.yarnpkg.com/en/docs/cli/cache/
 [stack.yaml.lock]: https://docs.haskellstack.org/en/stable/lock_files/
 
-\[¹\]: roughly speaking; there's also the `my_project/.stack-work` serving a similar purpose. The difference is of a local/global kind; once compiled, `my_project` modules (`Config.hs`, `Utils.hs`, what have you) will go under the project-local `.stack-work`; but dependency *packages* (e.g. `text`, `lens`, `aeson`) will go under the user-global `~/.stack/snapshots`. Doing so enjoys deterministic-build properties of packages in Stack, and facilitates built deps reuse across projects (so there won't appear gazillion builds of `text-1.2.3.1`, just a single one per `(cpu architecture, compile flag set)` will exist).
+\[¹\]: roughly speaking; there's also the `my_project/.stack-work` serving a similar purpose. The difference is of a local/global kind; once compiled, `my_project` modules (`Config.hs`, `Utils.hs`, what have you) will go under the project-local `.stack-work`; but dependency *packages* (e.g. `text`, `lens`, `aeson`) will go under the user-global `~/.stack/snapshots`. Doing so enjoys deterministic-build properties of packages in Stack, and facilitates built deps reuse across projects (so there won't appear gazillion builds of `text-1.2.3.1`, just a single one per `(cpu_architecture, compile_flag_set)` will exist).

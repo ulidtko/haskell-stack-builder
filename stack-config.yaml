@@ -6,38 +6,53 @@ local-bin-path: /home/builder/bin
 ghc-options:
   $locals: -Wall
   $targets: -Werror
-  $everything: -static -optl-static
+  #$everything: -static -optl-static
 apply-ghc-options: everything
+
+hide-th-loading: false
+
+#-- https://cabal.readthedocs.io/en/3.4/setup-commands.html#runhaskell-setup-hs-configure
 configure-options:
   $everything:
-    - --disable-shared
+    #-- Without dynamic libHS*.so libs, Template Haskell breaks.
+    #-- Final executables only use static libHS*.a libs;
+    #-- both flags are needed to get working TH compiles.
+    - --enable-shared
     - --enable-static
-    - --disable-executable-dynamic
-    - --enable-executable-static
+
+  $targets:
+    - --disable-executable-dynamic # (default)
+    #- --enable-executable-static # NOT the same as above
+
+    - --enable-executable-stripping
+    - --disable-debug-info
 
 #-- Override from commandline if needed. Rationale: on CI, $ncpus is often
 #-- ridiculously large (32+) but RAM is severely limited. And GHC loves RAM.
 jobs: 1
 
-setup-info:
-  ghc:
-    linux64-custom-musl-ncurses6:
-      8.6.5:
-        url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.6.5-release/ghc-8.6.5-x86_64-unknown-linux-musl.tar.xz"
-        content-length: 140167348
-        sha1: 3ce575af840e886ba5d2641f68577ace38ac21c6
-        sha256: ec6d0417822c3bfafc7aea0b0402294901231bc5d72dd17a2b849e3f44850695
 
-      8.8.4:
-        url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.8.4-release/ghc-8.8.4-x86_64-unknown-linux-musl.tar.xz"
-        content-length: 153669364
-        sha1: 7a9c1e84eed98b742cbc184cac6b9d9b6d9d18d4
-        sha256: 05df654655dc08b9056487839b7a5fbe6d5b8325fa366deb9fe6422e7ce7916c
-
-      8.10.2:
-        url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.10.2-release/ghc-8.10.2-x86_64-unknown-linux-musl.tar.xz"
-        content-length: 161032796
-        sha1: fe1b01fc8f988b3fe6e46494d89e80c3a6d24184
-        sha256: 9081c5a8d66cda6b886978bd8277109fe160adf326cbba6283ca9abbdccd45c1
-
-ghc-variant: musl
+#-- The below is only relevant for Alpine/Musl images.
+#
+# setup-info:
+#   ghc:
+#     linux64-custom-musl-ncurses6:
+#       8.6.5:
+#         url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.6.5-release/ghc-8.6.5-x86_64-unknown-linux-musl.tar.xz"
+#         content-length: 140167348
+#         sha1: 3ce575af840e886ba5d2641f68577ace38ac21c6
+#         sha256: ec6d0417822c3bfafc7aea0b0402294901231bc5d72dd17a2b849e3f44850695
+#
+#       8.8.4:
+#         url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.8.4-release/ghc-8.8.4-x86_64-unknown-linux-musl.tar.xz"
+#         content-length: 153669364
+#         sha1: 7a9c1e84eed98b742cbc184cac6b9d9b6d9d18d4
+#         sha256: 05df654655dc08b9056487839b7a5fbe6d5b8325fa366deb9fe6422e7ce7916c
+#
+#       8.10.2:
+#         url: "https://github.com/commercialhaskell/ghc/releases/download/ghc-8.10.2-release/ghc-8.10.2-x86_64-unknown-linux-musl.tar.xz"
+#         content-length: 161032796
+#         sha1: fe1b01fc8f988b3fe6e46494d89e80c3a6d24184
+#         sha256: 9081c5a8d66cda6b886978bd8277109fe160adf326cbba6283ca9abbdccd45c1
+#
+#ghc-variant: musl
