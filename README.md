@@ -39,6 +39,25 @@ In LTS-14.27 build config & `FROM debian:buster-slim`:
 
 Extra effort has been applied to prune unnecessary stuff; see [Dockerfile](./Dockerfile).
 
+## Build config options ##
+
+With the primary purpose to minimize Dockerfile branching, these are accepted:
+
+`--build-arg` key | Example values | Default value | Explanation
+------------------|----------------|---------------|---------------------------
+`GHC_VERSION`     | 8.8.2, 8.8.4   | 8.6.5         | Used in `stack setup --install-ghc`
+`STACK_RESOLVER`  | lts-16.31      | lts-14.27     | Stackage snapshot tag
+`UID`             | 1001, 65534    | 1000          | POSIX UID of `builder` user
+
+Complete `docker build` commandline specifying all the options (example):
+
+    docker build \
+        --build-arg UID=$(id -u) \
+        --build-arg GHC_VERSION=8.8.4 \
+        --build-arg STACK_RESOLVER=lts-16.31 \
+        -t haskell-stack-builder:lts-16.31 \
+        .
+
 ## Dependency caching on CI ##
 
 Unlike some [other builders][YARN_CACHE_FOLDER], Stack does not provide a clear-cut option to preserve compiled dependencies externally. This often leads to ridiculously long CI builds, as those hundreds of dependency packages get recompiled from scratch in every pipeline run.
