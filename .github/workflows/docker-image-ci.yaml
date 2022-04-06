@@ -2,7 +2,7 @@ name: Robotized rebuild
 on:
   push:
     branches:
-      - master
+      - opensource
 
 jobs:
   build-and-publish:
