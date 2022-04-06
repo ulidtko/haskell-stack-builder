@@ -81,6 +81,8 @@ WORKDIR /home/builder
 
 #-- configure Stack, pull a GHC, strip it down [+1.34 GiB]
 COPY --chown=builder stack-config.yaml /tmp/
+#-- SC2046 -- word-splitting is intented @ GHC_VERSION
+# hadolint ignore=SC2046
 RUN \
     if [ "$GHC_VERSION" = "8.6.5" ]; then \
         sed -i 's!\(- --enable-executable-static\)!#\1 # requires Cabal 3.0+!' /tmp/stack-config.yaml; \
