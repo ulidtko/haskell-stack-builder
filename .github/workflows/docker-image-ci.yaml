@@ -1,0 +1,79 @@
+name: Robotized rebuild
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-publish:
+    strategy:
+      matrix:
+        snapshot: [lts-17.11, lts-18.28, lts-19.2]
+        #flavour: [bullseye-slim,musl-static] # TODO
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      #- uses: docker/build-push-action@v2
+      #-- OMG what a crap.
+      #--   https://github.com/docker/build-push-action/issues/17
+      #-- I'ma roll my own. Hold my bash
+
+      - name: Static pre-build check
+        uses: hadolint/hadolint-action@v1.6.0
+
+      - name: Format target image tag
+        #-- Ever seen the string lowercasing function *as a docker image* ?
+        #-- Here. Enjoy https://github.community/t/additional-function-s-lowercase-uppercase/140632/3
+        run: >
+          echo IMGTAG="$(tr A-Z a-z <<< "${{ github.repository }}")":${{ matrix.snapshot }}
+          >> $GITHUB_ENV
+
+      - name: Image build
+        run: >
+          docker build .
+          --tag "$IMGTAG"
+          --build-arg STACK_RESOLVER=${{ matrix.snapshot }}
+          --label GIT_REF=${{ github.ref }}
+          --label GIT_SHA=${{ github.sha }}
+          --label CI_BUILDNUM=${{ github.run_id }}
+          --label org.opencontainers.image.source=https://github.com/ulidtko/haskell-stack-builder
+
+      - name: Smoke test
+        run: >
+          echo "Host id: $(id)"; ls -l;
+          mkdir -vp test/output;
+          find test -type d | xargs chmod -v 707;
+          find test -type f | xargs chmod -v 606;
+          docker run --rm
+          -v $PWD/test/foobar:/home/builder/src
+          -v $PWD/test/output:/home/builder/bin
+          "$IMGTAG"
+          stack install . --stack-yaml stack.${{ matrix.snapshot }}.yaml --allow-different-user;
+
+          test/output/foobar
+          && echo "===== COMPILER TEST PASSED ====="
+
+      - name: Tooling install test (interactive)
+        run: |
+          docker run --rm -i "$IMGTAG" bash -i << 'EOF'
+          ls -l ~/.local/bin ; { echo $PATH | tr : \\n; }
+          set -e
+          hlint --version
+          stylish-haskell --version
+          EOF
+      - name: Tooling install test (scripted)
+        run: |
+          set -e
+          docker run --rm "$IMGTAG" hlint --version
+          docker run --rm "$IMGTAG" stylish-haskell --version
+
+      - name: Docker login
+        run: >
+          docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Push image
+        run: |
+          docker tag "$IMGTAG" ghcr.io/"$IMGTAG"
+          docker push ghcr.io/"$IMGTAG"
