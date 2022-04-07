@@ -1,9 +1,7 @@
-resolver: lts-18.17
+resolver: lts-18.28
 
 packages:
 - .
 
 extra-deps:
-  - base64-0.4.2.3
   - case-conversion-0.2@sha256:f4e218c8b5bc486242a4ffd8dbf5a1c79a1198b5c4a5767216e4d3d3f82257d7
-  - ghc-byteorder-4.11.0.0.10
