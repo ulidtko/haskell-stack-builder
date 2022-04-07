@@ -7,7 +7,7 @@ Default build config:
  * GHC version: 8.10.7
  * Cabal version: 3.2.1.0
  * Stack version: 2.7.3
- * Stackage snapshot: LTS-18.17
+ * Stackage snapshot: LTS-18.28
 
 Versions are customizable via `--build-arg`'s, see below.
 
@@ -15,14 +15,14 @@ Versions are customizable via `--build-arg`'s, see below.
 
 First build the image:
 
-    docker build -t haskell-stack-builder:lts-14.27 .
+    docker build -t haskell-stack-builder:lts-18.28 .
 
 Then supposing you have a Stack project under `foobar_project` and `binary_outputs` directory:
 
     docker run --rm -t \
         -v $PWD/foobar_project:/home/builder/src \
         -v $PWD/binary_outputs:/home/builder/bin \
-        haskell-stack-builder:lts-14.27 \
+        haskell-stack-builder:lts-18.28 \
         stack build --copy-bins
 
 That's it. On build success, find the executables under `binary_outputs/`.

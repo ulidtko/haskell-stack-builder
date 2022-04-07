@@ -38,7 +38,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 # Alpine has libtinfo linked into libncurses
 #RUN ln -vsf libncursesw.so.6 /usr/lib/libtinfow.so.6
 
-ARG STACK_RESOLVER=lts-18.17
+ARG STACK_RESOLVER=lts-18.28
 ARG GHC_VERSION=implied
 
 ENV STACK_BIN=https://github.com/commercialhaskell/stack/releases/download/v2.7.3/stack-2.7.3-linux-x86_64-bin
