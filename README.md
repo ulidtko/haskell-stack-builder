@@ -1,3 +1,5 @@
+[![CI](https://github.com/ulidtko/haskell-stack-builder/actions/workflows/docker-image-ci.yaml/badge.svg)](https://github.com/ulidtko/haskell-stack-builder/actions?query=workflow:docker-image-ci)
+
 # `haskell-stack-builder` #
 
 This is an unprivileged (rootless) Docker Image for building Haskell using Stack.
