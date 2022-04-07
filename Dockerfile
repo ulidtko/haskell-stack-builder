@@ -41,20 +41,20 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 ARG STACK_RESOLVER=lts-18.28
 ARG GHC_VERSION=implied
 
-ENV STACK_BIN=https://github.com/commercialhaskell/stack/releases/download/v2.7.3/stack-2.7.3-linux-x86_64-bin
+ENV STACK_BIN=https://github.com/commercialhaskell/stack/releases/download/v2.7.5/stack-2.7.5-linux-x86_64-bin
 # Not using a STACK_VERSION variable, because they subtly changed
 # the asset naming/url scheme between v2.3.1 and v2.3.3. Use sed and caution
 WORKDIR /usr/local/share
-COPY stack-2.7.3-linux-x86_64-bin.sha256 \
-     stack-2.7.3-linux-x86_64-bin.asc \
+COPY stack-2.7.5-linux-x86_64-bin.sha256 \
+     stack-2.7.5-linux-x86_64-bin.asc \
      GPG-KEY-575159689BEFB442-dev@fpcomplete \
      ./
 # hadolint ignore=DL4006
 RUN curl -fsSL "$STACK_BIN" -o ${STACK_BIN##*/} && \
-    sha256sum -c stack-2.7.3-linux-x86_64-bin.sha256 >&2 && \
+    sha256sum -c stack-2.7.5-linux-x86_64-bin.sha256 >&2 && \
     gpg -q --import GPG-KEY-* && \
     printf "trust\n5\ny\n" | gpg --command-fd 0 --no-tty --edit-key 575159689BEFB442 2>/dev/null && \
-    gpg --verify stack-2.7.3-linux-x86_64-bin.asc && \
+    gpg --verify stack-2.7.5-linux-x86_64-bin.asc && \
     rm -rf ~/.gnupg && \
     mv -v stack-*-linux-x86_64-bin /usr/local/bin/stack && \
     chmod 755 /usr/local/bin/stack && \

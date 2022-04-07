@@ -8,7 +8,7 @@ Default build config:
 
  * GHC version: 8.10.7
  * Cabal version: 3.2.1.0
- * Stack version: 2.7.3
+ * Stack version: 2.7.5
  * Stackage snapshot: LTS-18.28
 
 Versions are customizable via `--build-arg`'s, see below.
