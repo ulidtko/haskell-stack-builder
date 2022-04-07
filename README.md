@@ -13,7 +13,7 @@ Versions are customizable via `--build-arg`'s, see below.
 
 ## Basic usage, volumes ##
 
-First build the image:
+First build the image (or [pull from GHCR](#built-images-on-ghcr)):
 
     docker build -t haskell-stack-builder:lts-18.28 .
 
@@ -81,3 +81,15 @@ Look into the [lockfile][stack.yaml.lock] if you want to know the best **invalid
 [stack.yaml.lock]: https://docs.haskellstack.org/en/stable/lock_files/
 
 \[¹\]: roughly speaking; there's also the `my_project/.stack-work` serving a similar purpose. The difference is of a local/global kind; once compiled, `my_project` modules (`Config.hs`, `Utils.hs`, what have you) will go under the project-local `.stack-work`; but dependency *packages* (e.g. `text`, `lens`, `aeson`) will go under the user-global `~/.stack/snapshots`. Doing so enjoys deterministic-build properties of packages in Stack, and facilitates built deps reuse across projects (so there won't appear gazillion builds of `text-1.2.3.1`, just a single one per `(cpu_architecture, compile_flag_set)` will exist).
+
+## Built images on GHCR ##
+
+Rebuilt and tested automatically by CI pipeline, and published to GHCR.io.
+
+See https://github.com/ulidtko/haskell-stack-builder/pkgs/container/haskell-stack-builder
+
+```
+docker pull ghcr.io/ulidtko/haskell-stack-builder:lts-17.15
+docker pull ghcr.io/ulidtko/haskell-stack-builder:lts-18.18
+docker pull ghcr.io/ulidtko/haskell-stack-builder:lts-19.2
+```
