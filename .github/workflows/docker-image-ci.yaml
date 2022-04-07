@@ -5,7 +5,7 @@ on:
       - opensource
 
 jobs:
-  build-and-publish:
+  buildimg:
     strategy:
       matrix:
         snapshot: [lts-17.15, lts-18.28, lts-19.2]
