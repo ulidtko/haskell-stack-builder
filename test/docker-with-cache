@@ -1,0 +1,9 @@
+#!/bin/sh -x
+exec \
+docker run --rm -it \
+    -v $HOME/.stack/stack.sqlite3:/home/builder/.stack/stack.sqlite3 \
+    -v $HOME/.stack/snapshots:/home/builder/.stack/snapshots \
+    \
+    -v $PWD:/home/builder/src \
+    -v $HOME/.local/bin:/home/builder/bin \
+    "$@"
