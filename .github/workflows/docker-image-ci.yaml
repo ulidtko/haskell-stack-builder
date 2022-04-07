@@ -55,19 +55,21 @@ jobs:
           test/output/foobar
           && echo "===== COMPILER TEST PASSED ====="
 
-      - name: Tooling install test (interactive)
-        run: |
-          docker run --rm -i "$IMGTAG" bash -i << 'EOF'
-          ls -l ~/.local/bin ; { echo $PATH | tr : \\n; }
-          set -e
-          hlint --version
-          stylish-haskell --version
-          EOF
-      - name: Tooling install test (scripted)
-        run: |
-          set -e
-          docker run --rm "$IMGTAG" hlint --version
-          docker run --rm "$IMGTAG" stylish-haskell --version
+      #-- FIXME for the "tools included" flavors
+      #
+      # - name: Tooling install test (interactive)
+      #   run: |
+      #     docker run --rm -i "$IMGTAG" bash -i << 'EOF'
+      #     ls -l ~/.local/bin ; { echo $PATH | tr : \\n; }
+      #     set -e
+      #     hlint --version
+      #     stylish-haskell --version
+      #     EOF
+      # - name: Tooling install test (scripted)
+      #   run: |
+      #     set -e
+      #     docker run --rm "$IMGTAG" hlint --version
+      #     docker run --rm "$IMGTAG" stylish-haskell --version
 
       - name: Docker login
         run: >
