@@ -8,7 +8,7 @@ jobs:
   buildimg:
     strategy:
       matrix:
-        snapshot: [lts-17.15, lts-18.28, lts-19.2]
+        snapshot: [lts-17.15, lts-18.28, lts-19.17, lts-19.25]
         #flavour: [bullseye-slim,musl-static] # TODO
 
     runs-on: ubuntu-latest
